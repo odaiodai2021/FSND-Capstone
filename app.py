@@ -192,8 +192,10 @@ def create_app(test_config=None):
         except Exception as e:
             print(e)
 
-        return (jsonify({'success': True,
-                'created_movie': new_movie.format()}), 201)
+        return jsonify({
+            'success': True,
+            'created_movie': new_movie.format()
+        }), 201
 
     @app.route('/movies/<int:id>', methods=['PATCH'])
     @requires_auth('patch:movies')
