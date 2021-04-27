@@ -130,7 +130,7 @@ class CastingAgencyTest(unittest.TestCase):
 
     def test_patch_movie(self):
         post_movie = self.post_movie(EXECUTIVE_PRODUCER)
-        movie = json.loads(post_movie.data)["created_movie"]
+        movie = json.loads(post_movie.data)
 
         response = self.patch_movie(movie["id"], EXECUTIVE_PRODUCER)
         data = json.loads(response.data)
@@ -238,16 +238,22 @@ class CastingAgencyTest(unittest.TestCase):
         self.assertEqual(data["success"], False)
 
     def test_delete_actor(self):  
-        post_actor = self.post_actor(EXECUTIVE_PRODUCER)
-        actor = json.loads(post_actor.data)
-
-        response = self.delete_actor(
-            actor["created_actor"]["id"],
-            EXECUTIVE_PRODUCER
-            )
-        data = json.loads(response.data)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data["success"], True)
+        create_actor = {
+            'name': 'Test_name',
+            'age': '30',
+            'gender': 'Male'
+        }
+        res = self.client().post('/Actors', headers={
+                                        'Authorization': 'Bearer ' + EXECUTIVE_PRODUCER
+                                    }, json = create_actor)
+        data = json.loads(res.data)
+        actor_id= data['actor']['id']
+        res = self.client().delete('/Actors/{}'.format(actor_id),  headers={
+                                        'Authorization': 'Bearer ' + EXECUTIVE_PRODUCER
+                                    })
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
 
     def test_404_delete_actor(self):
         response = self.delete_actor(5134, EXECUTIVE_PRODUCER)
