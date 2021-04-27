@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Actor, Movie, rollback
 from auth import requires_auth, AuthError
+from flask_migrate import Migrate
 
 
 def create_app(test_config=None):
@@ -13,7 +14,8 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
     CORS(app)
-
+    db = SQLAlchemy(app)
+    migrate = Migrate(app, db)
 
     @app.after_request
     def after_request(response):
@@ -35,11 +37,11 @@ def create_app(test_config=None):
 
     @app.route('/Actors', methods=['GET'])
     @requires_auth('get:actors')
-    def get_actors(jwt):
+    def get_actors():
         actors = Actors.query.all()
         if len(actors) == 0:
             abort(404)
-        formatted_actors = [act.format() for act in actors]
+        formatted_actors = [actor.format() for actor in actors]
         return jsonify({
             'success': True,
             'actors': formatted_actors
@@ -175,7 +177,6 @@ def create_app(test_config=None):
     def post_movies(payload):
         
         body = request.get_json()
-
         title = body.get('title')
         release_date = body.get('release_date')
 
