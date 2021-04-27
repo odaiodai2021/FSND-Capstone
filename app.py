@@ -35,7 +35,7 @@ def create_app(test_config=None):
 
     # set a get request for actors
 
-    @app.route('/Actors', methods=['GET'])
+    @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
     def get_actors():
         actors = Actors.query.all()
