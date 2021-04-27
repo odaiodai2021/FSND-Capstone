@@ -14,27 +14,42 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
 
+
+    @app.after_request
+    def after_request(response):
+        response.headers.add(
+            'Access-Control-Allow-Headers', 'Content-Type, Authorization, true'
+        )
+        response.headers.add(
+            'Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS'
+        )
+        response.headers.add('Access-Control-Allow-origins', '*')
+        return response
+
     # create the actors action here 
     @app.route('/', methods=['GET'])
     def start():
-        return "<h1> This is my Final Project &#x1F60; </h1>"
+        return "<h1> This is my Final Project :) </h1>"
 
     # set a get request for actors
 
-    @app.route('/actors', methods=['GET'])  
+    @app.route('/Actors', methods=['GET'])
     @requires_auth('get:actors')
-    def get_actors(payload):
-        actor = Actor.query.all()
+    def get_actors(jwt):
+        actors = Actors.query.all()
+        if len(actors) == 0:
+            abort(404)
+        formatted_actors = [act.format() for act in actors]
         return jsonify({
-            "success": True,
-            "actors": [actors.format() for actors in actor]
+            'success': True,
+            'actors': formatted_actors
         }), 200
 
     # get the actorst by_id
 
     @app.route('/actors/<int:actor_id>', methods=['GET'])
     @requires_auth('get:actors')
-    def get_actor(payload ,actor_id):
+    def get_actor(actor_id):
         actor = Actor.query.get(actor_id)
         if actor is None:
             abort(404)
@@ -132,7 +147,7 @@ def create_app(test_config=None):
 
     @app.route('/movies', methods=['GET']) 
     @requires_auth('get:movies')
-    def get_movies(payload):
+    def get_movies():
         movies = Movie.query.all()
 
         return jsonify({
@@ -144,7 +159,7 @@ def create_app(test_config=None):
 
     @app.route('/movies/<int:movie_id>', methods=['GET'])
     @requires_auth('get:movies')
-    def get_movie(payload, movie_id):
+    def get_movie(movie_id):
         movie = Movie.query.get(movie_id)
         if movie is None:
             abort(404)
@@ -214,7 +229,7 @@ def create_app(test_config=None):
 
     @app.route('/movies/<int:movie_id>', methods=['DELETE', "GET"])
     @requires_auth('delete:movie')
-    def delete_movie(payload, movie_id):
+    def delete_movie(movie_id):
         try:
             movie = Movie.query.filter(
                 Movie.id == movie_id).one_or_none()
@@ -232,7 +247,7 @@ def create_app(test_config=None):
             rollback()
             abort(422)
 
-    # Handle error
+# Handle error
 
     @app.errorhandler(400)
     def bad_request(error):

@@ -20,7 +20,7 @@ class CastingAgencyTest(unittest.TestCase):
         }
         self.test_actor = {
             "name": "Jhon Smith",
-            "age": 15,
+            "age": 55,
             "gender": "male"
         }
         self.database_path = os.environ["DATABASE_URL"]
