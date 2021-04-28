@@ -15,12 +15,12 @@ class CastingAgencyTest(unittest.TestCase):
         self.app = APP
         self.client = self.app.test_client
         self.test_movie = {
-            "title": "Tom and jerry",
-            "release_date": "15-2-2021",
+            "title": "Jhone Smith",
+            "release_date": "15-12-2021",
         }
         self.test_actor = {
-            "name": "zaid ahmad",
-            "age": 15,
+            "name": "odai slaiti",
+            "age": 35,
             "gender": "male"
         }
         self.database_path = os.environ["DATABASE_URL"]
@@ -48,7 +48,7 @@ class CastingAgencyTest(unittest.TestCase):
         response = self.client().patch(
             f"/actors/{actor_id}",
             json={
-                "name": "zaidssssssss",
+                "name": "Tom Hanks",
                 "age": "30",
                 "gender": "male"
             },
@@ -60,8 +60,8 @@ class CastingAgencyTest(unittest.TestCase):
         response = self.client().patch(
             f"/movies/{movie_id}",
             json={
-                "title": "80 days arround the earth",
-                "release_date": "2020-2-20"
+                "title": "Wanted",
+                "release_date": "2020-12-12"
             },
             headers={"Authorization": f"Bearer {token}"},
         )
@@ -149,11 +149,13 @@ class CastingAgencyTest(unittest.TestCase):
 
     def test_delete_movie(self):
         post_movie = self.post_movie(EXECUTIVE_PRODUCER)
-        movie = json.loads(post_movie.data)["created_movie"]
+        movie = json.loads(post_movie.data)
 
-        response = self.delete_movie(movie["id"], EXECUTIVE_PRODUCER)
+        response = self.delete_actor(
+            movie["created_movie"]["id"],
+            EXECUTIVE_PRODUCER
+            )
         data = json.loads(response.data)
-
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["success"], True)
 
