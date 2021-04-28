@@ -15,12 +15,12 @@ class CastingAgencyTest(unittest.TestCase):
         self.app = APP
         self.client = self.app.test_client
         self.test_movie = {
-            "title": "Mr and Mrs Smith",
-            "release_date": "8-4-2021",
+            "title": "Tom and jerry",
+            "release_date": "15-2-2021",
         }
         self.test_actor = {
-            "name": "Jhon Smith",
-            "age": 55,
+            "name": "zaid ahmad",
+            "age": 15,
             "gender": "male"
         }
         self.database_path = os.environ["DATABASE_URL"]
@@ -48,7 +48,7 @@ class CastingAgencyTest(unittest.TestCase):
         response = self.client().patch(
             f"/actors/{actor_id}",
             json={
-                "name": "Jhone",
+                "name": "zaidssssssss",
                 "age": "30",
                 "gender": "male"
             },
@@ -60,8 +60,8 @@ class CastingAgencyTest(unittest.TestCase):
         response = self.client().patch(
             f"/movies/{movie_id}",
             json={
-                "title": "Wanted",
-                "release_date": "2020-12-15"
+                "title": "80 days arround the earth",
+                "release_date": "2020-2-20"
             },
             headers={"Authorization": f"Bearer {token}"},
         )
@@ -79,7 +79,7 @@ class CastingAgencyTest(unittest.TestCase):
         )
         return response
 
-    
+
     def test_get_all_movies(self):
         response = self.client().get(
             "/movies",
@@ -91,7 +91,7 @@ class CastingAgencyTest(unittest.TestCase):
 
     def test_get_movie_by_id(self):
         response = self.client().get(
-            "/movies/158",
+            "/movies/1",
             headers={
                 "Authorization": f"Bearer {EXECUTIVE_PRODUCER}"
             }
@@ -102,7 +102,7 @@ class CastingAgencyTest(unittest.TestCase):
         self.assertTrue(data['movie'])
 
 
-    def test_404_get_movie_by_id(self):
+    def test_404_get_movie_by_id(self): 
         response = self.client().get(
             f"/movies/{2345}",
             headers={"Authorization": f"Bearer {EXECUTIVE_PRODUCER}"}
@@ -130,7 +130,7 @@ class CastingAgencyTest(unittest.TestCase):
 
     def test_patch_movie(self):
         post_movie = self.post_movie(EXECUTIVE_PRODUCER)
-        movie = json.loads(post_movie.data)
+        movie = json.loads(post_movie.data)["created_movie"]
 
         response = self.patch_movie(movie["id"], EXECUTIVE_PRODUCER)
         data = json.loads(response.data)
@@ -164,23 +164,23 @@ class CastingAgencyTest(unittest.TestCase):
 
 
     def test_get_all_actors(self):
-        response = self.client().get(
+        response = self.client().get(  
             "/actors",
             headers={
-                "Authorization": f"Bearer {EXECUTIVE_PRODUCER}"
+                "Authorization": f"Bearer {EXECUTIVE_PRODUCER}" 
                 }
         )
         data = json.loads(response.data)
         self.assertEqual(data["success"], True)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200) 
 
-    def test_get_actor_by_id(self):
+    def test_get_actor_by_id(self): 
         post_actor = self.post_actor(EXECUTIVE_PRODUCER)
         actor = json.loads(post_actor.data)["created_actor"]
         actor_id = actor["id"]
 
         response = self.client().get(
-            f"/actors/{actor_id}",
+            f"/actors/{actor_id}", 
             headers={"Authorization": f"Bearer {EXECUTIVE_PRODUCER}"}, 
         )
         data = json.loads(response.data)
@@ -188,7 +188,7 @@ class CastingAgencyTest(unittest.TestCase):
         self.assertEqual(data["success"], True)
         self.assertEqual(data["actor"], actor)
 
-        self.delete_actor(actor_id, EXECUTIVE_PRODUCER) 
+        self.delete_actor(actor_id, EXECUTIVE_PRODUCER)
 
     def test_404_get_actor_by_id(self): 
         response = self.client().get(
@@ -203,23 +203,23 @@ class CastingAgencyTest(unittest.TestCase):
         self.assertEqual(data["success"], False)
 
     def test_post_actor(self):
-        response = self.post_actor(EXECUTIVE_PRODUCER)
+        response = self.post_actor(EXECUTIVE_PRODUCER) 
         data = json.loads(response.data)
         actor = data["created_actor"] 
         self.assertEqual(data["success"], True)
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(actor, actor)
 
-        self.delete_actor(actor["id"], EXECUTIVE_PRODUCER)  
+        self.delete_actor(actor["id"], EXECUTIVE_PRODUCER)
 
     def test_401_post_actor(self):
-        response = self.post_actor(CASTING_ASSISTANT)
+        response = self.post_actor(CASTING_ASSISTANT) 
         data = json.loads(response.data)
         self.assertEqual(data["success"], False)
         self.assertEqual(response.status_code, 401)
 
-    def test_patch_actor(self):
-        post_actor = self.post_actor(EXECUTIVE_PRODUCER)
+    def test_patch_actor(self): 
+        post_actor = self.post_actor(EXECUTIVE_PRODUCER) 
         actor = json.loads(post_actor.data)["created_actor"]
 
         response = self.patch_actor(actor["id"], EXECUTIVE_PRODUCER)
@@ -230,7 +230,7 @@ class CastingAgencyTest(unittest.TestCase):
 
         self.delete_actor(actor["id"], EXECUTIVE_PRODUCER)
 
-    def test_404_patch_actor(self):
+    def test_404_patch_actor(self): 
         response = self.patch_actor(1234, EXECUTIVE_PRODUCER)
         data = json.loads(response.data)
 
@@ -238,27 +238,24 @@ class CastingAgencyTest(unittest.TestCase):
         self.assertEqual(data["success"], False)
 
     def test_delete_actor(self):  
-        create_actor = {
-            'name': 'Test_name',
-            'age': '30',
-            'gender': 'Male'
-        }
-        res = self.client().post('/Actors', headers={
-                                        'Authorization': 'Bearer ' + EXECUTIVE_PRODUCER
-                                    }, json = create_actor)
-        data = json.loads(res.data)
-        actor_id= data['actor']['id']
-        res = self.client().delete('/Actors/{}'.format(actor_id),  headers={
-                                        'Authorization': 'Bearer ' + EXECUTIVE_PRODUCER
-                                    })
-        data = json.loads(res.data)
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
+        post_actor = self.post_actor(EXECUTIVE_PRODUCER)
+        actor = json.loads(post_actor.data)
 
-    def test_404_delete_actor(self):
+        response = self.delete_actor(
+            actor["created_actor"]["id"],
+            EXECUTIVE_PRODUCER
+            )
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data["success"], True)
+
+    def test_404_delete_actor(self): 
         response = self.delete_actor(5134, EXECUTIVE_PRODUCER)
         data = json.loads(response.data)
         self.assertEqual(data["success"], False)
+
+
+
 
 if __name__ == "__main__":
     unittest.main()

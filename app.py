@@ -232,7 +232,7 @@ def create_app(test_config=None):
 
     @app.route('/movies/<int:movie_id>', methods=['DELETE', "GET"])
     @requires_auth('delete:movie')
-    def delete_movie(movie_id):
+    def delete_movie(payload, movie_id):
         try:
             movie = Movie.query.filter(
                 Movie.id == movie_id).one_or_none()
