@@ -37,8 +37,8 @@ def create_app(test_config=None):
 
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
-    def get_actors():
-        actors = Actors.query.all()
+    def get_actors(payload):
+        actors = Actor.query.all()
         if len(actors) == 0:
             abort(404)
         formatted_actors = [actor.format() for actor in actors]
@@ -51,7 +51,7 @@ def create_app(test_config=None):
 
     @app.route('/actors/<int:actor_id>', methods=['GET'])
     @requires_auth('get:actors')
-    def get_actor(actor_id):
+    def get_actor(payload, actor_id):
         actor = Actor.query.get(actor_id)
         if actor is None:
             abort(404)
@@ -149,7 +149,7 @@ def create_app(test_config=None):
 
     @app.route('/movies', methods=['GET']) 
     @requires_auth('get:movies')
-    def get_movies():
+    def get_movies(payload):
         movies = Movie.query.all()
 
         return jsonify({
@@ -161,7 +161,7 @@ def create_app(test_config=None):
 
     @app.route('/movies/<int:movie_id>', methods=['GET'])
     @requires_auth('get:movies')
-    def get_movie(movie_id):
+    def get_movie(payload, movie_id):
         movie = Movie.query.get(movie_id)
         if movie is None:
             abort(404)

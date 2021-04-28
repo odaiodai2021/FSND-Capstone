@@ -59,6 +59,7 @@ def get_token_auth_header():
 
     # return the token part of the header
     token = spliting[1]
+    print()
     return token
 
 # check_permissions(permission, payload) method
@@ -79,9 +80,7 @@ def check_permissions(permission, payload):
 # verify_decode_jwt(token) method
 
 def verify_decode_jwt(token):
-    jsonurl = urlopen(
-        f'https://{AUTH0_DOMAIN}/.well-known/jwks.json'
-    )
+    jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
     jwks = json.loads(jsonurl.read())
     unverified_header = jwt.get_unverified_header(token)
     rsa_key = {}
@@ -150,6 +149,7 @@ def requires_auth(permission=''):
 
             except:
                 abort(401)
+                print()
 
             check_permissions(permission, payload)
 
