@@ -4,8 +4,8 @@ from flask_migrate import Migrate, MigrateCommand
 from app import app
 from models import db
 
-migrate = Migrate(APP, db)
-manager = Manager(APP)
+migrate = Migrate(app, db)
+manager = Manager(app)
 
 manager.add_command("db", MigrateCommand)
 
