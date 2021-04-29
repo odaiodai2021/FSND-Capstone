@@ -187,13 +187,14 @@ def create_app(test_config=None):
             new_movie.release_date = release_date
 
             new_movie.insert()
-            return jsonify({
-                'success': True,
-                'created_movie': new_movie.format()
-            }), 200
 
         except Exception as e:
             print(e)
+        
+        return jsonify({
+                'success': True,
+                'created_movie': new_movie.format()
+            }), 200
 
     @app.route('/movies/<int:id>', methods=['PATCH'])
     @requires_auth('patch:movies')
@@ -316,4 +317,4 @@ def create_app(test_config=None):
 APP = create_app()
 
 if __name__ == '__main__':
-    APP.run(host='0.0.0.0', port=8080, debug=True)
+    APP.run()
