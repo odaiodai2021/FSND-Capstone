@@ -18,6 +18,7 @@ def rollback():
 
 
 class Movie(db.Model):
+    __tablename__ = "public.actors"
     __tablename__ = "movies"
 
     id = Column(Integer, primary_key=True)
@@ -44,6 +45,7 @@ class Movie(db.Model):
 
 
 class Actor(db.Model):
+    __tablename__ = "public.actors"
     __tablename__ = "actors"
 
     id = Column(Integer, primary_key=True)

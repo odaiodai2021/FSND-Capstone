@@ -117,7 +117,7 @@ class CastingAgencyTest(unittest.TestCase):
         data = json.loads(response.data)
         movie = data["created_movie"]
         self.assertEqual(data["success"], True)
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(movie, movie)
 
         self.delete_movie(movie["id"], EXECUTIVE_PRODUCER)
