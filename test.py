@@ -2,7 +2,7 @@ import os
 import unittest
 import json
 
-from app import APP
+from app import app
 from models import setup_db, Movie, Actor
 
 CASTING_ASSISTANT = os.environ["ASSISTANT"]
