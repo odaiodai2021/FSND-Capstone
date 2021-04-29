@@ -28,43 +28,43 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-origins', '*')
         return response
 
-    # create the actors action here 
+    # create the actors action here
     @app.route('/', methods=['GET'])
     def start():
         return "<h1> This is my Final Project :) </h1>"
 
-    # set a get request for actors
+    # Get actors
 
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
-    def get_actors(payload):
+    def get_actors(jwt):
+        # Get all actors route
         actors = Actor.query.all()
-        if len(actors) == 0:
-            abort(404)
-        formatted_actors = [actor.format() for actor in actors]
+
         return jsonify({
             'success': True,
-            'actors': formatted_actors
+            'actors': [actor.format() for actor in actors],
         }), 200
 
     # get the actorst by_id
 
     @app.route('/actors/<int:actor_id>', methods=['GET'])
     @requires_auth('get:actors')
-    def get_actor(payload, actor_id):
+    def get_actor(jwt, actor_id):
         actor = Actor.query.get(actor_id)
         if actor is None:
             abort(404)
+
         return jsonify({
             "success": True,
             "actor": actor.format()
         }), 200
 
-    # post an actor
+    # post actor
 
     @app.route('/actors', methods=['POST'])
     @requires_auth('post:actors')
-    def post_actors(payload):
+    def post_actors(jwt):
         body = request.get_json()
         name = body.get('name')
         age = body.get('age')
@@ -88,11 +88,11 @@ def create_app(test_config=None):
             "created_actor": new_actor.format()
         }), 200
 
-    # patch the data or (update it)
+    # patch the data
 
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
     @requires_auth('patch:actors')
-    def edit_actors(payload, actor_id):
+    def edit_actors(jwt, actor_id):
         body = request.get_json() 
         
         actor = Actor.query.get(actor_id)
@@ -116,40 +116,39 @@ def create_app(test_config=None):
                 actor.gender = new_gender
 
             actor.update()
+            return jsonify({
+                "success": True,
+                "patched_actor": actor.format()
+            }), 200
         except:
             rollback()
             abort(422)
-
-        return jsonify({
-            "success": True,
-            "patched_actor": actor.format()
-        }), 200
 
     # get the actor by id 
 
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
     @requires_auth('delete:actors')
-    def delete_actors(payload, actor_id):
+    def delete_actors(jwt, actor_id):
         actor = Actor.query.get(actor_id)
         if actor is None:
             abort(404)
 
         try:
             actor.delete()
+            return jsonify({
+                "success": True,
+                "deleted_actor": actor.format()
+            }), 200
+
         except Exception:
             rollback()
             abort(500)
-
-        return jsonify({
-            "success": True,
-            "deleted_actor": actor.format()
-        }), 200
 
     # Get movie 
 
     @app.route('/movies', methods=['GET']) 
     @requires_auth('get:movies')
-    def get_movies(payload):
+    def get_movies(jwt):
         movies = Movie.query.all()
 
         return jsonify({
@@ -161,7 +160,7 @@ def create_app(test_config=None):
 
     @app.route('/movies/<int:movie_id>', methods=['GET'])
     @requires_auth('get:movies')
-    def get_movie(payload, movie_id):
+    def get_movie(jwt, movie_id):
         movie = Movie.query.get(movie_id)
         if movie is None:
             abort(404)
@@ -171,10 +170,9 @@ def create_app(test_config=None):
         })
 
     # Create movie 
-
     @app.route('/movies', methods=['POST'])
     @requires_auth('post:movies')
-    def post_movies(payload):
+    def post_movies(jwt):
         
         body = request.get_json()
         title = body.get('title')
@@ -189,17 +187,17 @@ def create_app(test_config=None):
             new_movie.release_date = release_date
 
             new_movie.insert()
+            return jsonify({
+                'success': True,
+                'created_movie': new_movie.format()
+            }), 200
+
         except Exception as e:
             print(e)
 
-        return jsonify({
-            'success': True,
-            'created_movie': new_movie.format()
-        }), 201
-
     @app.route('/movies/<int:id>', methods=['PATCH'])
     @requires_auth('patch:movies')
-    def edit_movies(payload, id):
+    def edit_movies(jwt, id):
 
         movie = Movie.query.get(id)
 
@@ -217,25 +215,27 @@ def create_app(test_config=None):
         try:
             if title is not None:
                 movie.title = title
+
             if release_date is not None:
                 movie.relaese_date = release_date
+
             movie.update()
+
+            return jsonify({
+                "success": True,
+                "patched_movie": movie.format()
+            }), 200
 
         except Exception:
             abort(422)
 
-
-        return jsonify({
-            "success": True,
-            "patched_movie": movie.format()
-        }), 201
-
     @app.route('/movies/<int:movie_id>', methods=['DELETE', "GET"])
     @requires_auth('delete:movie')
-    def delete_movie(payload, movie_id):
+    def delete_movie(jwt, movie_id):
         try:
             movie = Movie.query.filter(
-                Movie.id == movie_id).one_or_none()
+                Movie.id == movie_id
+            ).one_or_none()
 
             if movie is None:
                 abort(404)
@@ -246,6 +246,7 @@ def create_app(test_config=None):
                 'success': True,
                 'deleted_movie': movie.format()
             }), 200
+
         except:
             rollback()
             abort(422)
