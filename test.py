@@ -68,7 +68,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     def test_delete_movie(self):
         res = self.client().delete(
-            '/movies/1',
+            '/movies/3',
             headers={'Authorization': f'Bearer {EXECUTIVE_PRODUCER}'}
         )
         data = json.loads(res.data)
@@ -145,7 +145,9 @@ class CastingAgencyTestCase(unittest.TestCase):
         res = self.client().patch(
             '/actors/1',
             json=updated_actor,
-            headers={"Authorization": "Bearer " + EXECUTIVE_PRODUCER}
+            headers={
+                "Authorization": f"Bearer {EXECUTIVE_PRODUCER}"
+            }
         )
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
