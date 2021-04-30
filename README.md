@@ -241,27 +241,29 @@ API_AUDIENCE = '<your api audience>'
 ## Users in Auth0
 ## Roles and Permissions 
 
-1. Casting Assistant:
+1. **Casting Assistant:**
 
 - Can get actors and movies only
 
-```- email: assistant.udacity@gmail.com
-- Password: Fsndcasting2021
-```
+- Email: `assistant.udacity@gmail.com`
+- Password: **Fsndcasting2021**
 
 
-2. Casting Director:
+2. **Casting Director:**
+
 - Can Get and Post actors and movies only
 
-```- Email: director.udacity@gmail.com
-- Password: Fsndcasting2021
-```
 
-3. Executive Producer 
+- Email: `director.udacity@gmail.com`
+- Password: **Fsndcasting2021**
+
+
+3. **Executive Producer:** 
 - Can Get All permessions GET, POST, PATCH, DELETE actors and movies
-```- Email: producer.udacity@gmail.com
-- Password: Fsndcasting2021
-```
+
+- Email: `producer.udacity@gmail.com`
+- Password: **Fsndcasting2021**
+
 
 ## Testing 
 

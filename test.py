@@ -136,6 +136,31 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
+    def test_delete_actor(self):
+        create_actor = {
+            'name': 'Tom Cruise',
+            'age': '30',
+            'gender': 'Male'
+        }
+        res = self.client().post(
+            '/actors',
+            headers={
+                "Authorization": f"Bearer {EXECUTIVE_PRODUCER}"
+            },
+            json=create_actor
+        )
+        data = json.loads(res.data)
+        actor_id = data['created_actor']['id']
+        res = self.client().delete(
+            '/actors/{}'.format(actor_id),
+            headers={
+                "Authorization": f"Bearer {CASTING_ASSISTANT}"
+            }
+        )
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(data['success'], True)
+
     def test_update_actor(self):
         updated_actor = {
             "name": "odai",
