@@ -47,6 +47,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         """Executed after reach test"""
         pass
 
+    # test Movies endpoint
     def test_get_movies(self):
         res = self.client().get(
             '/movies',
@@ -88,11 +89,12 @@ class CastingAgencyTestCase(unittest.TestCase):
             json=update_movie,
             headers={"Authorization": f"Bearer {EXECUTIVE_PRODUCER}"}
         )
-        # print(res)
+    
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
 
+    # test Actors endpoint
     def test_get_actors(self):
         res = self.client().get(
             '/actors',
@@ -172,13 +174,13 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['patched_actor'])
 
+    # test RBAC and test for error behavior of each endpoint
     def test_401_get_actors_without_permessions(self):
         res = self.client().get('/actors')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
         self.assertFalse(data['success'])
 
-    # the movie not found
     def test_404_get_movie_by_id(self):
         response = self.client().get(
             f"/movies/{2345}",
