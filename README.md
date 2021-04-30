@@ -25,7 +25,7 @@ python3 -m venv env
 Activating :
 
 ```bash
-source env/bin/activate
+source venv/bin/activate
 ```
 
 ### Export environment virables
@@ -268,5 +268,5 @@ API_AUDIENCE = '<your api audience>'
 To run the tests, run
 ```
 createdb <database_name>
-python test_app.py
+python test.py
 ```
