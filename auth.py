@@ -6,7 +6,7 @@ from urllib.request import urlopen
 from flask import abort
 import os
 
-# setup.sh 
+# setup.sh
 AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
 ALGORITHMS = os.environ.get('ALGORITHMS')
 API_AUDIENCE = os.environ.get('API_AUDIENCE')
@@ -64,6 +64,7 @@ def get_token_auth_header():
 
 # check_permissions(permission, payload) method
 
+
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         raise AuthError({
@@ -78,6 +79,7 @@ def check_permissions(permission, payload):
     return True
 
 # verify_decode_jwt(token) method
+
 
 def verify_decode_jwt(token):
     jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")

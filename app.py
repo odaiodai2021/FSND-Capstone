@@ -74,12 +74,12 @@ def create_app(test_config=None):
             abort(422)
         try:
             new_actor = Actor(
-                name = name,
-                gender = gender,
-                age = age
+                name=name,
+                gender=gender,
+                age=age
             )
 
-            new_actor.insert() 
+            new_actor.insert()
         except Exception:
             abort(500)
 
@@ -93,8 +93,8 @@ def create_app(test_config=None):
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
     @requires_auth('patch:actors')
     def edit_actors(jwt, actor_id):
-        body = request.get_json() 
-        
+        body = request.get_json()
+
         actor = Actor.query.get(actor_id)
 
         if actor is None:
@@ -116,15 +116,16 @@ def create_app(test_config=None):
                 actor.gender = new_gender
 
             actor.update()
-            return jsonify({
-                "success": True,
-                "patched_actor": actor.format()
-            }), 200
         except:
             rollback()
             abort(422)
 
-    # get the actor by id 
+        return jsonify({
+            "success": True,
+            "patched_actor": actor.format()
+        }), 200
+
+    # get the actor by id
 
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
     @requires_auth('delete:actors')
@@ -144,9 +145,9 @@ def create_app(test_config=None):
             rollback()
             abort(500)
 
-    # Get movie 
+    # Get movie
 
-    @app.route('/movies', methods=['GET']) 
+    @app.route('/movies', methods=['GET'])
     @requires_auth('get:movies')
     def get_movies(jwt):
         movies = Movie.query.all()
@@ -156,7 +157,7 @@ def create_app(test_config=None):
             "movies": [movie.format() for movie in movies]
         })
 
-    # Get movie by id 
+    # Get movie by id
 
     @app.route('/movies/<int:movie_id>', methods=['GET'])
     @requires_auth('get:movies')
@@ -169,11 +170,11 @@ def create_app(test_config=None):
             "movie": [movie.format()]
         })
 
-    # Create movie 
+    # Create movie
     @app.route('/movies', methods=['POST'])
     @requires_auth('post:movies')
     def post_movies(jwt):
-        
+
         body = request.get_json()
         title = body.get('title')
         release_date = body.get('release_date')
@@ -190,7 +191,7 @@ def create_app(test_config=None):
 
         except Exception as e:
             print(e)
-        
+
         return jsonify({
                 'success': True,
                 'created_movie': new_movie.format()
@@ -265,7 +266,7 @@ def create_app(test_config=None):
     @app.errorhandler(401)
     def unauthorized(error):
         return jsonify({
-            "success":False,
+            "success": False,
             "error": 401,
             "message": "Unauthorized"
         }), 401
@@ -277,7 +278,6 @@ def create_app(test_config=None):
             "error": 403,
             "message": "Forbidden"
         }), 403
-
 
     @app.errorhandler(404)
     def resource_not_found_error(error):
@@ -315,5 +315,3 @@ def create_app(test_config=None):
     return app
 
 app = create_app()
-
-

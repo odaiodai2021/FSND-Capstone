@@ -25,7 +25,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
         self.new_movie = {
             "title": "Wanted",
-            "release_date": "2008",
+            "release_date": "2008"
         }
         self.update_movie = {
             "title": "This movie is updated"
