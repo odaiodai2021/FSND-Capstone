@@ -147,7 +147,13 @@ class CastingAgencyTestCase(unittest.TestCase):
         )
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(data['message'], {'code': 'no_permission', 'description': 'No permission'})
+        self.assertEqual(
+            data['message'],
+            {
+                'code': 'no_permission',
+                'description': 'No permission'
+            }
+        )
 
     def test_update_actor(self):
         updated_actor = {
@@ -172,8 +178,8 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 401)
         self.assertFalse(data['success'])
 
-    # tests RBAC
-    def test_404_get_movie_by_id(self): # the movie not found 
+    # the movie not found
+    def test_404_get_movie_by_id(self):
         response = self.client().get(
             f"/movies/{2345}",
             headers={"Authorization": f"Bearer {EXECUTIVE_PRODUCER}"}
@@ -183,7 +189,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data["success"], False)
 
-    def test_401_post_movie(self): # unauthorized
+    def test_401_post_movie(self):
         response = self.client().post(
             "/movies",
             json=self.test_movie,
@@ -192,7 +198,13 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data['message'], {'code': 'no_permission', 'description': 'No permission'})
+        self.assertEqual(
+            data['message'],
+            {
+                'code': 'no_permission',
+                'description': 'No permission'
+            }
+        )
 
     def test_404_patch_movie(self):
         response = self.client().patch(
@@ -205,7 +217,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertTrue(data['error'], 404)
         self.assertEqual(data['message'], 'resource not found')
-    
+
     def test_401_patch_movie_unauthorized(self):
         response = self.client().patch(
             '/movies/1',
@@ -215,7 +227,13 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data['message'], {'code': 'no_permission', 'description': 'No permission'})
+        self.assertEqual(
+            data['message'],
+            {
+                'code': 'no_permission',
+                'description': 'No permission'
+            }
+        )
 
     def test_401_delete_movie(self):
         response = self.client().delete(
@@ -225,7 +243,13 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data['message'], {'code': 'no_permission', 'description': 'No permission'})
+        self.assertEqual(
+            data['message'],
+            {
+                'code': 'no_permission',
+                'description': 'No permission'
+            }
+        )
 
     def test_422_delete_movie(self):
         response = self.client().delete(
@@ -259,7 +283,13 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data['message'], {'code': 'no_permission', 'description': 'No permission'})
+        self.assertEqual(
+            data['message'],
+            {
+                'code': 'no_permission',
+                'description': 'No permission'
+            }
+        )
 
     def test_401_patch_actor_unauthorized(self):
         response = self.client().patch(
@@ -270,7 +300,13 @@ class CastingAgencyTestCase(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data['message'], {'code': 'no_permission', 'description': 'No permission'})
+        self.assertEqual(
+            data['message'],
+            {
+                'code': 'no_permission',
+                'description': 'No permission'
+            }
+        )
 
     def test_404_patch_actor(self):
         response = self.client().patch(
@@ -291,7 +327,13 @@ class CastingAgencyTestCase(unittest.TestCase):
         )
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(data['message'], {'code': 'no_permission', 'description': 'No permission'})
+        self.assertEqual(
+            data['message'],
+            {
+                'code': 'no_permission',
+                'description': 'No permission'
+            }
+        )
 
     def test_404_delete_actor(self):
         response = self.client().delete(
@@ -304,6 +346,6 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertTrue(data['error'], 404)
         self.assertEqual(data['message'], 'resource not found')
-    
+
 if __name__ == "__main__":
     unittest.main()
