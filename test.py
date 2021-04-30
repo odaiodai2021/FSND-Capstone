@@ -68,7 +68,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
     def test_delete_movie(self):
         res = self.client().delete(
-            '/movies/24',
+            '/movies/1',
             headers={'Authorization': f'Bearer {EXECUTIVE_PRODUCER}'}
         )
         data = json.loads(res.data)
@@ -80,7 +80,7 @@ class CastingAgencyTestCase(unittest.TestCase):
         update_movie = {'title': 'updated movie', 'release_date': '2/1/2001'
                         }
         res = self.client().patch(
-            '/movies/5',
+            '/movies/2',
             json=update_movie,
             headers={"Authorization": f"Bearer {EXECUTIVE_PRODUCER}"}
         )
