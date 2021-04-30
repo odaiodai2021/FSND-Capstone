@@ -28,7 +28,7 @@ Activating :
 source venv/bin/activate
 ```
 
-### Export environment virables
+### Export environment variables
 
 Export the environment variables to your local machine by running :
 

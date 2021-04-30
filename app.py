@@ -66,6 +66,7 @@ def create_app(test_config=None):
     @requires_auth('post:actors')
     def post_actors(jwt):
         body = request.get_json()
+
         name = body.get('name')
         age = body.get('age')
         gender = body.get('gender')
@@ -284,7 +285,7 @@ def create_app(test_config=None):
         return jsonify({
             "success": False,
             "error": 404,
-            "message": "not found"
+            "message": "resource not found"
         }), 404
 
     @app.errorhandler(422)
@@ -292,7 +293,7 @@ def create_app(test_config=None):
         return jsonify({
             "success": False,
             "error": 422,
-            "message": 'unprocessable'
+            "message": 'Unprocessable'
         }), 422
 
 
