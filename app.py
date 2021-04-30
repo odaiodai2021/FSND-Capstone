@@ -296,7 +296,6 @@ def create_app(test_config=None):
             "message": 'Unprocessable'
         }), 422
 
-
     @app.errorhandler(500)
     def internal_server_error(error):
         return jsonify({
