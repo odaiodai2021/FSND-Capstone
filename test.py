@@ -25,7 +25,7 @@ class CastingAgencyTestCase(unittest.TestCase):
 
         self.new_movie = {
             "title": "Wanted",
-            "release_date": "2008"
+            "release_date": "Sun, 02 Feb 2020 00:00:00 GMT"
         }
         self.update_movie = {
             "title": "This movie is updated"
@@ -67,49 +67,24 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
 
     def test_delete_movie(self):
-        create_movie = {
-            'title': 'This is a delete test movie',
-            'release_date': '2000'
-        }
-        res = self.client().post(
-            '/movies',
-            headers={
-                "Authorization": f"Bearer {EXECUTIVE_PRODUCER}"
-            },
-            json=create_movie
-        )
-        data = json.loads(res.data)
-        movie_id = data['movie']['id']
         res = self.client().delete(
-            '/movies/{}'.format(movie_id),
-            headers={
-                "Authorization": f"Bearer {EXECUTIVE_PRODUCER}"
-            }
+            '/movies/24',
+            headers={'Authorization': f'Bearer {EXECUTIVE_PRODUCER}'}
         )
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
+        self.assertTrue(data['deleted_movie'])
 
     def test_update_movie(self):
-        create_movie = {
-            'title': 'This an update test movie',
-            'release_date': '1990'
+        update_movie = {'title': 'updated movie', 'release_date': '2/1/2001'
                         }
-        res = self.client().post(
-            '/movies',
-            headers={"Authorization": f"Bearer {EXECUTIVE_PRODUCER}"},
-            json=create_movie
-        )
-        data = json.loads(res.data)
-        movie_id = data['movie']['id']
-        update_movie = self.update_movie
         res = self.client().patch(
-            '/movies/{}'.format(movie_id),
-            headers={
-                "Authorization": f"Bearer {EXECUTIVE_PRODUCER}"
-            },
-            json=update_movie
+            '/movies/5',
+            json=update_movie,
+            headers={"Authorization": f"Bearer {EXECUTIVE_PRODUCER}"}
         )
+        # print(res)
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -150,7 +125,7 @@ class CastingAgencyTestCase(unittest.TestCase):
             json=create_actor
         )
         data = json.loads(res.data)
-        actor_id = data['actor']['id']
+        actor_id = data['created_actor']['id']
         res = self.client().delete(
             '/actors/{}'.format(actor_id),
             headers={
@@ -162,31 +137,19 @@ class CastingAgencyTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
 
     def test_update_actor(self):
-        create_actor = {
-            'name': 'Angelina Jolie',
-            'age': '45',
-            'gender': 'female'
+        updated_actor = {
+            "name": "odai",
+            "age": 36,
+            "gender": "male"
         }
-        res = self.client().post(
-            '/actors',
-            headers={
-                "Authorization": f"Bearer {EXECUTIVE_PRODUCER}"
-            },
-            json=create_actor
-        )
-        data = json.loads(res.data)
-        actor_id = data['actor']['id']
-        update_actor = self.update_actor
-        res = self.client().patch(
-            '/actors/{}'.format(actor_id),
-            headers={
-                "Authorization": f"Bearer {EXECUTIVE_PRODUCER}"
-            },
-            json=update_actor
+        res= self.client().patch(
+            '/actors/1',
+            json=updated_actor,
+            headers={"Authorization": "Bearer " + EXECUTIVE_PRODUCER}
         )
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
+        self.assertTrue(data['patched_actor'])
 
     def test_get_actors_without_permessions(self):
         res = self.client().get('/actors')
