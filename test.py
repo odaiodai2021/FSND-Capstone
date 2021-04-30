@@ -142,7 +142,7 @@ class CastingAgencyTestCase(unittest.TestCase):
             "age": 36,
             "gender": "male"
         }
-        res= self.client().patch(
+        res = self.client().patch(
             '/actors/1',
             json=updated_actor,
             headers={"Authorization": "Bearer " + EXECUTIVE_PRODUCER}
